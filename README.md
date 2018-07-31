@@ -15,7 +15,7 @@ npm install fast-file-rotate
 ## Example
 
 ```js
-const FileRotateTransport = require('../');
+const FileRotateTransport = require('fast-file-rotate');
 const winston = require('winston');
 
 const logger = winston.createLogger({
