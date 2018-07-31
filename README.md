@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/SerayaEryn/fast-file-rotate.svg?branch=master)](https://travis-ci.org/SerayaEryn/fast-file-rotate)
 [![Coverage Status](https://coveralls.io/repos/github/SerayaEryn/fast-file-rotate/badge.svg?branch=master)](https://coveralls.io/github/SerayaEryn/fast-file-rotate?branch=master)
-[![NPM version](https://img.shields.io/npm/v/fast-file-rotate.svg?style=flat)](https://www.npmjs.com/package/fast-file-rotate)
+[![NPM version](https://img.shields.io/npm/v/fast-file-rotate.svg?style=flat)](https://www.npmjs.com/package/fast-file-rotate) [![Greenkeeper badge](https://badges.greenkeeper.io/SerayaEryn/fast-file-rotate.svg)](https://greenkeeper.io/)
 
 A performant file transport providing daily log rotation for winston.
 
