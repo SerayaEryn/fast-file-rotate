@@ -33,9 +33,9 @@ const logger = winston.createLogger({
 The benchmark compares to the [winston-daily-rotate-file](https://github.com/winstonjs/winston-daily-rotate-file) module:
 
 ```
-benchFileRotateTransport*10000: 175.397ms
+benchFastFileRotate*10000: 175.397ms
 benchWinstonDailyRotateFile*10000: 580.341ms
-benchFileRotateTransport*10000: 141.746ms
+benchFastFileRotate*10000: 141.746ms
 benchWinstonDailyRotateFile*10000: 545.736ms
 ```
 

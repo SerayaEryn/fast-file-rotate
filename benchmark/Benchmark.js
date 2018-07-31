@@ -35,7 +35,7 @@ const winston2 = winston.createLogger({
 });
 
 const run = benchmark([
-  function benchFileRotateTransport (cb) {
+  function benchFastFileRotate (cb) {
     for (let i = 0; i < 10; i++) {
       winston1.log('info', 'hello world!');
     }
