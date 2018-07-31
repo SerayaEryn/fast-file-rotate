@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SerayaEryn/file-rotate-transport.git"
+    "url": "git+https://github.com/SerayaEryn/fast-file-rotate.git"
   },
   "scripts": {
     "unit": "tap test/*.test.js",
