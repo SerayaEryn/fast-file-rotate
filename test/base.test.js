@@ -31,7 +31,6 @@ test('should log into file without callback', (t) => {
 
 test('should rotate the log file', (t) => {
   t.plan(1);
-  cleanUp();
 
   const transport = new FileRotateTransport({
     fileName: __dirname + '/console%DATE%.log'
@@ -52,7 +51,6 @@ test('should rotate the log file', (t) => {
 
 test('should bubble events', (t) => {
   t.plan(1);
-  cleanUp();
 
   const transport = new FileRotateTransport({
     fileName: __dirname + '/console%DATE%.log'
@@ -65,6 +63,68 @@ test('should bubble events', (t) => {
   transport.stream.stream.emit('error', err);
 
   cleanUp();
+});
+
+test('should wait for close event of stream on close', (t) => {
+  t.plan(2);
+
+  const transport = new FileRotateTransport({
+    fileName: __dirname + '/console%DATE%.log'
+  });
+
+  transport.on('logged', () => {
+    logger.end();
+  });
+  transport.on('close', () => {
+    t.ok(transport.stream.stream.destroyed);
+  });
+  transport.on('finish', () => {
+    t.pass();
+    cleanUp();
+  })
+  const logger = winston.createLogger({
+    transports: [transport]
+  });
+
+  logger.info('debug', 'a message');
+});
+
+test('should close ready stream correctly', (t) => {
+  t.plan(2);
+
+  const transport = new FileRotateTransport({
+    fileName: __dirname + '/console%DATE%.log'
+  });
+
+  transport.stream.stream.on('ready', () => {
+    logger.end();
+  });
+  transport.on('close', () => {
+    t.ok(transport.stream.stream.destroyed);
+  });
+  transport.on('finish', () => {
+    t.pass();
+    cleanUp();
+  })
+  const logger = winston.createLogger({
+    transports: [transport]
+  });
+
+  logger.info('debug', 'a message');
+});
+
+test('should close new transport correctly', (t) => {
+  t.plan(1);
+
+  const transport = new FileRotateTransport({
+    fileName: __dirname + '/console%DATE%.log'
+  });
+
+  transport.on('finish', () => {
+    t.pass();
+    cleanUp();
+  })
+  transport.end();
 });
 
 function cleanUp() {
