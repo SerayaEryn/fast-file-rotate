@@ -29,6 +29,55 @@ test('should log into file without callback', (t) => {
   cleanUp();
 });
 
+test('should call callback on log()', (t) => {
+  t.plan(3);
+  cleanUp()
+
+  const transport = new FileRotateTransport({
+    fileName: __dirname + '/console%DATE%.log'
+  });
+  const logger = winston.createLogger({
+    transports: [transport]
+  });
+
+  transport.on('logged', () => {
+    t.pass();
+  })
+
+  transport.log({
+    level: 'debug', 
+    message: 'a message'
+  }, (err, logged) => {
+    t.error(err);
+    t.ok(logged);
+  });
+  logger.end();
+  cleanUp();
+});
+
+test('should handle missing callback on log()', (t) => {
+  t.plan(1);
+  cleanUp()
+
+  const transport = new FileRotateTransport({
+    fileName: __dirname + '/console%DATE%.log'
+  });
+  const logger = winston.createLogger({
+    transports: [transport]
+  });
+
+  transport.on('logged', () => {
+    t.pass();
+  })
+
+  transport.log({
+    level: 'debug', 
+    message: 'a message'
+  });
+  logger.end();
+  cleanUp();
+});
+
 test('should rotate the log file', (t) => {
   t.plan(1);
 
