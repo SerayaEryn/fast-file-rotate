@@ -11,8 +11,8 @@
   },
   "devDependencies": {
     "coveralls": "^3.0.2",
-    "eslint": "^5.2.0",
     "fastbench": "^1.0.1",
+    "standard": "^12.0.1",
     "tap": "^12.0.1",
     "winston": "^3.0.0",
     "winston-daily-rotate-file": "^3.3.0"
@@ -27,7 +27,7 @@
   "scripts": {
     "unit": "tap test/*.test.js",
     "test": "npm run lint && npm run unit",
-    "lint": "./node_modules/eslint/bin/eslint.js lib/* test/*.js",
+    "lint": "standard lib/* test/*.js benchmark/*",
     "coveralls": "npm run unit --  --cov",
     "coverage": "npm run coveralls && tap --coverage-report=lcov",
     "benchmark": "node benchmark/Benchmark.js"
