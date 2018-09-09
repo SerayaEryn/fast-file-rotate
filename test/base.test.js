@@ -184,6 +184,28 @@ function cleanUp () {
   }
 }
 
+test('should set buffer size correctly', (t) => {
+  t.plan(1)
+
+  const transport = new FileRotateTransport({
+    fileName: path.join(__dirname, '/console%DATE%.log'),
+    bufferSize: 32
+  })
+
+  t.strictEquals(transport.stream.stream.minLength, 32)
+})
+
+test('should use default buffer size', (t) => {
+  t.plan(1)
+
+  const transport = new FileRotateTransport({
+    fileName: path.join(__dirname, '/console%DATE%.log'),
+    bufferSize: null
+  })
+
+  t.strictEquals(transport.stream.stream.minLength, 4096)
+})
+
 function getFileName () {
   return path.join(__dirname, '/console', dateFormat.format('DDMMYYYY'), '.log')
 }

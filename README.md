@@ -42,6 +42,10 @@ The name of the log file(s). Must contain a `%DATE%` placeholder.
 The format of the date that will replace the placeholder `%DATE%` in the file name. Defaults to `DDMMYYYY`.<br>
 Supports all formating options of [fast-date-format](https://github.com/SerayaEryn/fast-date-format).
 
+#### bufferSize
+
+The size of the internal buffer that is used to store the logs before writing them to the file. Defaults to `4096`. 
+
 ## Benchmark
 
 The benchmark compares to the [winston-daily-rotate-file](https://github.com/winstonjs/winston-daily-rotate-file) module:
