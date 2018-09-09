@@ -37,7 +37,8 @@
     "log-rotate",
     "logrotate",
     "transport",
-    "daily"
+    "daily",
+    "daily-rotate-file"
   ],
   "author": "Denis Fäcke",
   "license": "MIT"
