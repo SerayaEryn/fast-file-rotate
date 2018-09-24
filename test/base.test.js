@@ -116,20 +116,28 @@ test('should bubble events', (t) => {
 })
 
 test('should wait for close event of stream on close', (t) => {
-  t.plan(2)
+  t.plan(6)
+  cleanUp()
 
   const transport = new FileRotateTransport({
     fileName: path.join(__dirname, '/console%DATE%.log')
   })
-
+  let finished = false
   transport.on('logged', () => {
+    t.notOk(finished)
     logger.end()
   })
   transport.on('close', () => {
+    t.ok(finished)
     t.ok(transport.stream.stream.destroyed)
   })
   transport.on('finish', () => {
+    finished = true
     t.pass()
+    fs.readFile(getFileName(), (err, buffer) => {
+      t.error(err)
+      t.strictEquals(buffer.toString(), '{"level":"info","message":"debug"}\n')
+    })
     cleanUp()
   })
   const logger = winston.createLogger({
@@ -177,13 +185,6 @@ test('should close new transport correctly', (t) => {
   transport.end()
 })
 
-function cleanUp () {
-  const fileName = getFileName()
-  if (fs.pathExistsSync(fileName)) {
-    fs.removeSync(fileName)
-  }
-}
-
 test('should set buffer size correctly', (t) => {
   t.plan(1)
 
@@ -206,6 +207,13 @@ test('should use default buffer size', (t) => {
   t.strictEquals(transport.stream.stream.minLength, 4096)
 })
 
+function cleanUp () {
+  const fileName = getFileName()
+  if (fs.pathExistsSync(fileName)) {
+    fs.removeSync(fileName)
+  }
+}
+
 function getFileName () {
-  return path.join(__dirname, '/console', dateFormat.format('DDMMYYYY'), '.log')
+  return path.join(__dirname, `/console${dateFormat.format('DDMMYYYY')}.log`)
 }
