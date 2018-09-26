@@ -30,6 +30,22 @@ test('should log into file without callback', (t) => {
   cleanUp()
 })
 
+test('log() should return true', (t) => {
+  t.plan(1)
+  cleanUp()
+
+  const transport = new FileRotateTransport({
+    fileName: path.join(__dirname, '/console%DATE%.log')
+  })
+  const logger = winston.createLogger({
+    transports: [transport]
+  })
+
+  t.ok(logger.info('debug', 'a message'))
+  logger.end()
+  cleanUp()
+})
+
 test('should call callback on log()', (t) => {
   t.plan(3)
   cleanUp()
