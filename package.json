@@ -1,6 +1,6 @@
 {
   "name": "fast-file-rotate",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A performant file transport providing daily log rotation for winston.",
   "main": "lib/FileRotateTransport.js",
   "dependencies": {
