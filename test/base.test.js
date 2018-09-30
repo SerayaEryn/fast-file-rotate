@@ -153,8 +153,8 @@ test('should wait for close event of stream on close', (t) => {
     fs.readFile(getFileName(), (err, buffer) => {
       t.error(err)
       t.strictEquals(buffer.toString(), '{"level":"info","message":"debug"}\n')
+      cleanUp()
     })
-    cleanUp()
   })
   const logger = winston.createLogger({
     transports: [transport]
