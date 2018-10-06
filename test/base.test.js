@@ -5,7 +5,7 @@ const test = tap.test
 const winston = require('winston')
 const FileRotateTransport = require('..')
 const DateFormat = require('fast-date-format')
-const fs = require('fs-extra')
+const fs = require('fs')
 const path = require('path')
 
 const dateFormat = new DateFormat()
@@ -43,6 +43,21 @@ test('log() should return true', (t) => {
 
   t.ok(logger.info('debug', 'a message'))
   logger.end()
+  cleanUp()
+})
+
+test('should create folder', (t) => {
+  t.plan(2)
+  cleanUp()
+
+  const transport = new FileRotateTransport({
+    fileName: path.join(__dirname, '/tmp/console%DATE%.log')
+  })
+
+  t.ok(transport)
+  t.ok(fs.existsSync(path.join(__dirname, '/tmp')))
+  fs.unlinkSync(path.join(__dirname, `/tmp/console${dateFormat.format('DDMMYYYY')}.log`))
+  fs.rmdirSync(path.join(__dirname, '/tmp'))
   cleanUp()
 })
 
@@ -225,8 +240,8 @@ test('should use default buffer size', (t) => {
 
 function cleanUp () {
   const fileName = getFileName()
-  if (fs.pathExistsSync(fileName)) {
-    fs.removeSync(fileName)
+  if (fs.existsSync(fileName)) {
+    fs.unlinkSync(fileName)
   }
 }
 

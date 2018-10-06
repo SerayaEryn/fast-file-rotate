@@ -5,7 +5,7 @@
   "main": "lib/FileRotateTransport.js",
   "dependencies": {
     "fast-date-format": "^1.0.1",
-    "fs-extra": "^7.0.0",
+    "mkdirp": "^0.5.1",
     "sonic-boom": "^0.6.0",
     "winston-transport": "^4.2.0"
   },
