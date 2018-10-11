@@ -4,7 +4,7 @@
   "description": "A performant file transport providing daily log rotation for winston.",
   "main": "lib/FileRotateTransport.js",
   "dependencies": {
-    "fast-date-format": "^1.0.1",
+    "fast-date-format": "^2.0.0",
     "mkdirp": "^0.5.1",
     "sonic-boom": "^0.6.0",
     "winston-transport": "^4.2.0"
