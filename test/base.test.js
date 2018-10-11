@@ -8,7 +8,7 @@ const DateFormat = require('fast-date-format')
 const fs = require('fs')
 const path = require('path')
 
-const dateFormat = new DateFormat()
+const dateFormat = new DateFormat('DDMMYYYY')
 
 test('should log into file without callback', (t) => {
   t.plan(1)
@@ -56,7 +56,7 @@ test('should create folder', (t) => {
 
   t.ok(transport)
   t.ok(fs.existsSync(path.join(__dirname, '/tmp')))
-  fs.unlinkSync(path.join(__dirname, `/tmp/console${dateFormat.format('DDMMYYYY')}.log`))
+  fs.unlinkSync(path.join(__dirname, `/tmp/console${dateFormat.format()}.log`))
   fs.rmdirSync(path.join(__dirname, '/tmp'))
   cleanUp()
 })
@@ -246,5 +246,5 @@ function cleanUp () {
 }
 
 function getFileName () {
-  return path.join(__dirname, `/console${dateFormat.format('DDMMYYYY')}.log`)
+  return path.join(__dirname, `/console${dateFormat.format()}.log`)
 }
