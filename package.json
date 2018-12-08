@@ -6,7 +6,7 @@
   "dependencies": {
     "fast-date-format": "^2.0.0",
     "mkdirp": "^0.5.1",
-    "sonic-boom": "^0.6.0",
+    "sonic-boom": "^0.7.0",
     "winston-transport": "^4.2.0"
   },
   "devDependencies": {
