@@ -141,7 +141,7 @@ test('should bubble events', (t) => {
     t.ok(err instanceof Error)
   })
   const err = new Error('something went wrong')
-  transport.stream.stream.emit('error', err)
+  transport.stream.emit('error', err)
 
   cleanUp()
 })
@@ -160,7 +160,7 @@ test('should wait for close event of stream on close', (t) => {
   })
   transport.on('close', () => {
     t.ok(finished)
-    t.ok(transport.stream.stream.destroyed)
+    t.ok(transport.stream.destroyed)
   })
   transport.on('finish', () => {
     finished = true
@@ -185,11 +185,11 @@ test('should close ready stream correctly', (t) => {
     fileName: path.join(__dirname, '/console%DATE%.log')
   })
 
-  transport.stream.stream.on('ready', () => {
+  transport.stream.on('ready', () => {
     logger.end()
   })
   transport.on('close', () => {
-    t.ok(transport.stream.stream.destroyed)
+    t.ok(transport.stream.destroyed)
   })
   transport.on('finish', () => {
     t.pass()
@@ -214,28 +214,6 @@ test('should close new transport correctly', (t) => {
     cleanUp()
   })
   transport.end()
-})
-
-test('should set buffer size correctly', (t) => {
-  t.plan(1)
-
-  const transport = new FileRotateTransport({
-    fileName: path.join(__dirname, '/console%DATE%.log'),
-    bufferSize: 32
-  })
-
-  t.strictEquals(transport.stream.stream.minLength, 32)
-})
-
-test('should use default buffer size', (t) => {
-  t.plan(1)
-
-  const transport = new FileRotateTransport({
-    fileName: path.join(__dirname, '/console%DATE%.log'),
-    bufferSize: null
-  })
-
-  t.strictEquals(transport.stream.stream.minLength, 4096)
 })
 
 function cleanUp () {
