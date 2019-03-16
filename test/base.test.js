@@ -56,7 +56,9 @@ test('should create folder', (t) => {
 
   t.ok(transport)
   t.ok(fs.existsSync(path.join(__dirname, '/tmp')))
-  fs.unlinkSync(path.join(__dirname, `/tmp/console${dateFormat.format()}.log`))
+  try {
+    fs.unlinkSync(path.join(__dirname, `/tmp/console${dateFormat.format()}.log`))
+  } catch (ignore) {}
   fs.rmdirSync(path.join(__dirname, '/tmp'))
   cleanUp()
 })
