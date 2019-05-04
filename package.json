@@ -11,12 +11,12 @@
     "coveralls": "^3.0.2",
     "fastbench": "^1.0.1",
     "standard": "^12.0.1",
-    "tap": "^12.0.1",
+    "tap": "^13.1.2",
     "winston": "^3.0.0",
     "winston-daily-rotate-file": "^3.3.3"
   },
   "engines": {
-    "node": ">= 6.0.0"
+    "node": ">=8.0.0"
   },
   "repository": {
     "type": "git",
