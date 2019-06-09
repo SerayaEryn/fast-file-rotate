@@ -27,7 +27,7 @@
     "unit": "ava test/*.test.js",
     "test": "npm run lint && npm run unit",
     "lint": "standard lib/* test/*.js benchmark/*",
-    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coverall",
+    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
     "coverage": "nyc npm test && nyc report --reporter=html",
     "benchmark": "node benchmark/Benchmark.js"
   },
