@@ -1,7 +1,6 @@
 'use strict'
 
-const tap = require('tap')
-const test = tap.test
+const test = require('ava')
 const winston = require('winston')
 const FileRotateTransport = require('..')
 const DateFormat = require('fast-date-format')
@@ -10,12 +9,14 @@ const path = require('path')
 
 const dateFormat = new DateFormat('DDMMYYYY')
 
+let index = 0
+
 test('should log into file without callback', (t) => {
   t.plan(1)
-  cleanUp()
 
+  const currentIndex = index++
   const transport = new FileRotateTransport({
-    fileName: path.join(__dirname, '/console%DATE%.log')
+    fileName: path.join(__dirname, `/tmp/console%DATE%${currentIndex}.log`)
   })
   const logger = winston.createLogger({
     transports: [transport]
@@ -27,48 +28,44 @@ test('should log into file without callback', (t) => {
 
   logger.info('debug', 'a message')
   logger.end()
-  cleanUp()
 })
 
 test('log() should return true', (t) => {
   t.plan(1)
-  cleanUp()
 
+  const currentIndex = index++
   const transport = new FileRotateTransport({
-    fileName: path.join(__dirname, '/console%DATE%.log')
+    fileName: path.join(__dirname, `/tmp/console%DATE%${currentIndex}.log`)
   })
   const logger = winston.createLogger({
     transports: [transport]
   })
 
-  t.ok(logger.info('debug', 'a message'))
+  t.truthy(logger.info('debug', 'a message'))
   logger.end()
-  cleanUp()
 })
 
 test('should create folder', (t) => {
   t.plan(2)
-  cleanUp()
 
+  const currentIndex = index++
   const transport = new FileRotateTransport({
-    fileName: path.join(__dirname, '/tmp/console%DATE%.log')
+    fileName: path.join(__dirname, `/tmp/console%DATE%${currentIndex}.log`)
   })
 
-  t.ok(transport)
-  t.ok(fs.existsSync(path.join(__dirname, '/tmp')))
+  t.truthy(transport)
+  t.truthy(fs.existsSync(path.join(__dirname, '/tmp')))
   try {
-    fs.unlinkSync(path.join(__dirname, `/tmp/console${dateFormat.format()}.log`))
+    fs.unlinkSync(path.join(__dirname, `/tmp/console${dateFormat.format()}${currentIndex}.log`))
   } catch (ignore) {}
-  fs.rmdirSync(path.join(__dirname, '/tmp'))
-  cleanUp()
 })
 
-test('should call callback on log()', (t) => {
+test.cb('should call callback on log()', (t) => {
   t.plan(3)
-  cleanUp()
 
+  const currentIndex = index++
   const transport = new FileRotateTransport({
-    fileName: path.join(__dirname, '/console%DATE%.log')
+    fileName: path.join(__dirname, `/tmp/console%DATE%${currentIndex}.log`)
   })
   const logger = winston.createLogger({
     transports: [transport]
@@ -82,19 +79,19 @@ test('should call callback on log()', (t) => {
     level: 'debug',
     message: 'a message'
   }, (err, logged) => {
-    t.error(err)
-    t.ok(logged)
+    t.falsy(err)
+    t.truthy(logged)
+    t.end()
   })
   logger.end()
-  cleanUp()
 })
 
 test('should handle missing callback on log()', (t) => {
   t.plan(1)
-  cleanUp()
 
+  const currentIndex = index++
   const transport = new FileRotateTransport({
-    fileName: path.join(__dirname, '/console%DATE%.log')
+    fileName: path.join(__dirname, `/tmp/console%DATE%${currentIndex}.log`)
   })
   const logger = winston.createLogger({
     transports: [transport]
@@ -109,14 +106,14 @@ test('should handle missing callback on log()', (t) => {
     message: 'a message'
   })
   logger.end()
-  cleanUp()
 })
 
 test('should rotate the log file', (t) => {
   t.plan(1)
 
+  const currentIndex = index++
   const transport = new FileRotateTransport({
-    fileName: path.join(__dirname, '/console%DATE%.log')
+    fileName: path.join(__dirname, `/tmp/console%DATE%${currentIndex}.log`)
   })
   transport.stream.currentDate = ~~(Date.now() / 86400000) - 1
   const logger = winston.createLogger({
@@ -129,48 +126,46 @@ test('should rotate the log file', (t) => {
 
   logger.info('debug', 'a message')
   logger.end()
-  cleanUp()
 })
 
 test('should bubble events', (t) => {
   t.plan(1)
 
+  const currentIndex = index++
   const transport = new FileRotateTransport({
-    fileName: path.join(__dirname, '/console%DATE%.log')
+    fileName: path.join(__dirname, `/tmp/console%DATE%${currentIndex}.log`)
   })
 
   transport.on('error', (err) => {
-    t.ok(err instanceof Error)
+    t.truthy(err instanceof Error)
   })
   const err = new Error('something went wrong')
   transport.stream.emit('error', err)
-
-  cleanUp()
 })
 
-test('should wait for close event of stream on close', (t) => {
+test.cb('should wait for close event of stream on close', (t) => {
   t.plan(6)
-  cleanUp()
 
+  const currentIndex = index++
   const transport = new FileRotateTransport({
-    fileName: path.join(__dirname, '/console%DATE%.log')
+    fileName: path.join(__dirname, `/tmp/console%DATE%${currentIndex}.log`)
   })
   let finished = false
   transport.on('logged', () => {
-    t.notOk(finished)
+    t.falsy(finished)
     logger.end()
   })
   transport.on('close', () => {
-    t.ok(finished)
-    t.ok(transport.stream.destroyed)
+    t.truthy(finished)
+    t.truthy(transport.stream.destroyed)
   })
   transport.on('finish', () => {
     finished = true
     t.pass()
-    fs.readFile(getFileName(), (err, buffer) => {
-      t.error(err)
-      t.strictEquals(buffer.toString(), '{"level":"info","message":"debug"}\n')
-      cleanUp()
+    fs.readFile(getFileName(currentIndex), (err, buffer) => {
+      t.falsy(err)
+      t.is(buffer.toString(), '{"level":"info","message":"debug"}\n')
+      t.end()
     })
   })
   const logger = winston.createLogger({
@@ -180,22 +175,23 @@ test('should wait for close event of stream on close', (t) => {
   logger.info('debug', 'a message')
 })
 
-test('should close ready stream correctly', (t) => {
+test.cb('should close ready stream correctly', (t) => {
   t.plan(2)
 
+  const currentIndex = index++
   const transport = new FileRotateTransport({
-    fileName: path.join(__dirname, '/console%DATE%.log')
+    fileName: path.join(__dirname, `/tmp/console%DATE%${currentIndex}.log`)
   })
 
   transport.stream.on('ready', () => {
     logger.end()
   })
   transport.on('close', () => {
-    t.ok(transport.stream.destroyed)
+    t.truthy(transport.stream.destroyed)
+    t.end()
   })
   transport.on('finish', () => {
     t.pass()
-    cleanUp()
   })
   const logger = winston.createLogger({
     transports: [transport]
@@ -204,27 +200,35 @@ test('should close ready stream correctly', (t) => {
   logger.info('debug', 'a message')
 })
 
-test('should close new transport correctly', (t) => {
+test.cb('should close new transport correctly', (t) => {
   t.plan(1)
 
+  const currentIndex = index++
   const transport = new FileRotateTransport({
-    fileName: path.join(__dirname, '/console%DATE%.log')
+    fileName: path.join(__dirname, `/tmp/console%DATE%${currentIndex}.log`)
   })
 
   transport.on('finish', () => {
     t.pass()
-    cleanUp()
+    t.end()
   })
   transport.end()
 })
 
+test.after('cleanup', (t) => {
+  cleanUp()
+})
+
 function cleanUp () {
-  const fileName = getFileName()
-  if (fs.existsSync(fileName)) {
-    fs.unlinkSync(fileName)
+  for (let i = 0; i < index; i++) {
+    const file = path.join(__dirname, `/tmp/console${dateFormat.format()}${i}.log`)
+    if (fs.existsSync(file)) {
+      fs.unlinkSync(file)
+    }
   }
+  fs.rmdirSync(path.join(__dirname, '/tmp'))
 }
 
-function getFileName () {
-  return path.join(__dirname, `/console${dateFormat.format()}.log`)
+function getFileName (index) {
+  return path.join(__dirname, `/tmp/console${dateFormat.format()}${index}.log`)
 }
