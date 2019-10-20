@@ -40,5 +40,8 @@
     "daily-rotate-file"
   ],
   "author": "Denis Fäcke",
-  "license": "MIT"
+  "license": "MIT",
+  "files": [
+    "lib"
+  ]
 }
