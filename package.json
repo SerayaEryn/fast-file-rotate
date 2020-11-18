@@ -11,7 +11,7 @@
     "ava": "^3.0.0",
     "fastbench": "^1.0.1",
     "nyc": "^15.0.0",
-    "standard": "^15.0.0",
+    "standard": "^16.0.3",
     "winston": "^3.0.0",
     "winston-daily-rotate-file": "^4.0.0"
   },
